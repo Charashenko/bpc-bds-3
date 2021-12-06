@@ -32,9 +32,6 @@ class Contact(models.Model):
         managed = False
         db_table = 'contact'
 
-    def __str__(self):
-        return f"{self.person}, {self.contact_type}, {self.value}"
-
 
 class Department(models.Model):
     department_id = models.AutoField(primary_key=True)
@@ -107,9 +104,6 @@ class Person(models.Model):
         managed = False
         db_table = 'person'
 
-    def __str__(self):
-        return f"{self.name} {self.surname}"
-
 
 class PersonHasAddress(models.Model):
     person = models.ForeignKey(Person, models.DO_NOTHING)
@@ -166,6 +160,9 @@ class Role(models.Model):
     class Meta:
         managed = False
         db_table = 'role'
+
+    def __str__(self):
+        return str(role_type)
 
 
 class StudyProgram(models.Model):

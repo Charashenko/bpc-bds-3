@@ -1,5 +1,5 @@
 from django import forms
-from .models import Person
+from .models import Person, Role, PersonHasRole
 import bcrypt, uuid
 
 class LoginForm(forms.Form):
@@ -12,7 +12,6 @@ class LoginForm(forms.Form):
         if not dbuser:
             raise forms.ValidationError("User does not exist!")
         else:
-            self.usr_name = dbuser.get(email = email).name
             return email
 
     def clean_password(self):
@@ -21,13 +20,20 @@ class LoginForm(forms.Form):
         except KeyError:
             return
         passwd = self.cleaned_data.get('password').encode('utf-8')
-        dbpass = Person.objects.get(email = email).passwd.encode('utf-8')
+        dbuser = Person.objects.get(email = email)
+        dbpass = dbuser.passwd.encode('utf-8')
         if not bcrypt.checkpw(passwd, dbpass):
             raise forms.ValidationError("Wrong password!")
         else:
+            phr = PersonHasRole.objects.filter(person=dbuser).select_related()
+            self.usr_roles = []
+            for role_qs in phr.all():
+                self.usr_roles.append(str(role_qs.role.role_type))
+            self.usr_id = dbuser.person_id
+            self.usr_name = dbuser.name
             return passwd
 
     def getUserId(self):
-        return [self.usr_name, str(uuid.uuid4())]
+        return [self.usr_id, self.usr_name, self.usr_roles]
 
         

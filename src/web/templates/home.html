@@ -8,6 +8,12 @@
         <ul class="topbar">
             <li><a class = "info">Welcome, {{name}}</a></li>
             <li><a href = "/detailed">Detailed view</a></li>
+            <li>
+                <form method="POST">{% csrf_token %}
+                    <input type="search" name="query" placeholder="enter user's name">
+                    <input type="submit" name="submit" value="Search">
+                </form>
+            </li>
             <li><a href = "/logout">Log out</a></li>
         </ul>
     </body>
