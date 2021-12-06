@@ -1,0 +1,32 @@
+<html>
+    <head>
+        {% load static %}
+        <title>BDS Application</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    </head>
+    <body>
+        <ul class = "topbar">
+            <li><a class = "info">Detailed view</a></li>
+            <li><a href = "/">Home</a></li>
+            <li><a href = "/logout">Log out</a></li>
+        </ul><br><br>
+        <table class="view">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name and Surname</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, vals in people.items %}
+                <tr>
+                    <td>{{key}}</td>
+                    {% for val in vals %}
+                    <td>{{val}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,14 @@
+<html>
+    <head>
+        {% load static %}
+        <title>BDS Application</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    </head>
+    <body>
+        <ul class="topbar">
+            <li><a class = "info">Welcome, {{name}}</a></li>
+            <li><a href = "/detailed">Detailed view</a></li>
+            <li><a href = "/logout">Log out</a></li>
+        </ul>
+    </body>
+</html>
