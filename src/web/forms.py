@@ -33,7 +33,7 @@ class LoginForm(forms.Form):
             self.usr_name = dbuser.name
             return passwd
 
-    def getUserId(self):
+    def getUserInfo(self):
         return [self.usr_id, self.usr_name, self.usr_roles]
 
         

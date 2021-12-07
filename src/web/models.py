@@ -20,6 +20,9 @@ class Address(models.Model):
         managed = False
         db_table = 'address'
 
+    def __str__(self):
+        return f"{self.state}, {self.street}, {self.city}, {self.house_number}, {self.postal_code}"
+
 
 class Contact(models.Model):
     contact_id = models.AutoField(primary_key=True)
@@ -31,6 +34,9 @@ class Contact(models.Model):
     class Meta:
         managed = False
         db_table = 'contact'
+
+    def __str__(self):
+        return f"{self.contact_type}, {self.value}"
 
 
 class Department(models.Model):
@@ -103,6 +109,24 @@ class Person(models.Model):
     class Meta:
         managed = False
         db_table = 'person'
+
+    def getName(self):
+        return self.name
+
+    def getSurname(self):
+        return self.surname
+
+    def getBirthdate(self):
+        return self.birthdate
+
+    def getEmail(self):
+        return self.email
+
+    def getPasswd(self):
+        return self.passwd
+    
+    def getNote(self):
+        return self.additional_note
 
 
 class PersonHasAddress(models.Model):
