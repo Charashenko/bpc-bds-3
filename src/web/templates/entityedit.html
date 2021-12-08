@@ -1,0 +1,19 @@
+<html>
+    <head>
+        {% load static %}
+        <title>BDS Application</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    </head>
+    <body>
+        <ul class="topbar">
+            <li><a class = "info">Welcome, {{person.Name}}</a></li>
+            <li><a href = "/detailed">Detailed view</a></li>
+            <li><a href = "/editEntity/{{person.Id}}">Edit</a></li>
+            <li><a href = "#passwordchange">Change your password</a></li>
+            <li><a href = "/logout">Log out</a></li>
+        </ul><br>
+        <form method="POST">{% csrf_token %}
+            <input class="btn" type="submit" name="editEntity" value="Save">
+        </form>
+    </body>
+</html>
