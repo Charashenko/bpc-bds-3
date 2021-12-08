@@ -38,6 +38,12 @@ class Contact(models.Model):
     def __str__(self):
         return f"{self.contact_type}, {self.value}"
 
+    def getType(self):
+        return self.contact_type
+
+    def getValue(self):
+        return self.value
+
 
 class Department(models.Model):
     department_id = models.AutoField(primary_key=True)
@@ -109,6 +115,9 @@ class Person(models.Model):
     class Meta:
         managed = False
         db_table = 'person'
+
+    def getId(self):
+        return self.person_id
 
     def getName(self):
         return self.name
@@ -224,3 +233,6 @@ class Thesis(models.Model):
     class Meta:
         managed = False
         db_table = 'thesis'
+
+    def __str__(self):
+        return self.name

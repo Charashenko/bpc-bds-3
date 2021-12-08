@@ -1,7 +1,56 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import *
 from .forms import LoginForm
-from django.db import connection
+from django.contrib import messages
+
+def getPersonAttrs(person):
+    contacts = Contact.objects.filter(person=person)
+    contacts = [[str(contact.getType()), str(contact.getValue())] for contact in contacts.all()]
+
+    addresses = PersonHasAddress.objects.filter(person=person).select_related()
+    addresses = [[str(qSet.address_type), str(qSet.address)] for qSet in addresses.all()]
+
+    roles = PersonHasRole.objects.filter(person=person).select_related()
+    roles = [str(qSet.role.role_type) for qSet in roles.all()]
+
+    faculties = FacultyHasPerson.objects.filter(person=person).select_related()
+    faculties = [str(qSet.faculty.name) for qSet in faculties.all()]
+
+    departments = DepartmentHasPerson.objects.filter(person=person).select_related()
+    departments = [str(qSet.department.name) for qSet in departments.all()]
+
+    programmes = ProgramHasPerson.objects.filter(person=person).select_related()
+    programmes = [str(qSet.program.name) for qSet in programmes.all()]
+
+    subjects = PersonHasSubject.objects.filter(person=person).select_related()
+    subjects = [str(qSet.subject.name) for qSet in subjects.all()]
+
+    try: # TODO Logging
+        thesis = Thesis.objects.get(person=person)
+    except:
+        thesis = None
+
+    attrs = {
+        'person': {
+            'Id': person.getId(),
+            'Name': person.getName(),
+            'Surname': person.getSurname(),
+            'Birthdate': person.getBirthdate(),
+            'Email': person.getEmail(),
+            'Passwd': person.getPasswd(),
+            'Note': person.getNote()
+        },
+        'addresses': addresses,
+        'contacts': contacts,
+        'roles': roles,
+        'faculties': faculties,
+        'departments': departments,
+        'programmes': programmes,
+        'subjects': subjects,
+        'thesis': thesis
+    }
+
+    return attrs
 
 def sessionCheck(request):
     if request.session.has_key('usr_info'):
@@ -13,59 +62,24 @@ def sessionCheck(request):
     return (False, False)
 
 def home(request):
-    if sessionCheck(request)[0]:
-        if sessionCheck(request)[1]:
-            usr_id = request.session['usr_info'][0]
-            person = Person.objects.get(person_id=usr_id)
+    check = sessionCheck(request)
+    if check[0]:
+        usr_info = request.session['usr_info']
+        person = Person.objects.get(person_id=usr_info[0])
 
-            contacts = Contact.objects.filter(person=person)
-            contacts = [str(contact).split(", ") for contact in contacts.all()]
+        attributes = getPersonAttrs(person)
+        
+        if request.method == 'GET': # TODO Choose site format
+            if check[1]:
+                print('admin')
+            else:
+                print('not admin')
 
-            addresses = PersonHasAddress.objects.filter(person=person).select_related()
-            addresses = [str(qSet.address) for qSet in addresses.all()]
-            
-            roles = PersonHasRole.objects.filter(person=person).select_related()
-            roles = [str(qSet.role.role_type) for qSet in roles.all()]
+            return render(request, 'home.html', attributes)
+        elif request.POST.get('elementChange'):
+            return redirect(elementChange)
 
-            faculties = FacultyHasPerson.objects.filter(person=person).select_related()
-            faculties = [str(qSet.faculty.name) for qSet in faculties.all()]
-
-            departments = DepartmentHasPerson.objects.filter(person=person).select_related()
-            departments = [str(qSet.department.name) for qSet in departments.all()]
-
-            programmes = ProgramHasPerson.objects.filter(person=person).select_related()
-            programmes = [str(qSet.program.name) for qSet in programmes.all()]
-
-            subjects = PersonHasSubject.objects.filter(person=person).select_related()
-            subjects = [str(qSet.subject.name) for qSet in subjects.all()]
-            
-            try:
-                thesis = Thesis.objects.get(person=person)
-            except:
-                thesis = None
-
-            params = {
-                'person': {
-                    'Name': person.getName(),
-                    'Surname': person.getSurname(),
-                    'Birthdate': person.getBirthdate(),
-                    'Email': person.getEmail(),
-                    'Passwd': person.getPasswd(),
-                    'Note': person.getNote()
-                },
-                'addresses': addresses,
-                'contacts': contacts,
-                'roles': roles,
-                'faculties': faculties,
-                'departments': departments,
-                'programmes': programmes,
-                'subjects': subjects,
-                'thesis': thesis
-            }
-
-            return render(request, 'home.html', params)
-        else:
-            return render(request, 'home.html', {'name':usr_info[1]})
+        return render(request, 'home.html', attributes) 
     else:
        return redirect(login)
 
@@ -86,22 +100,38 @@ def logout(request):
     return redirect(login)
 
 def detailed(request):
-    if sessionCheck(request)[0]:
-        if sessionCheck(request)[1]:
-            if request.method == 'GET':
-                people = {}
+    check = sessionCheck(request)
+    if check[0]:
+        if check[1]:
+            people = []
+            if request.method == 'POST':
                 usr_guery = request.POST.get('query')
-                with connection.cursor() as cursor:
-                    cursor.execute("select * from person")
-                    rows = cursor.fetchall()
-                    for row in rows:
-                        temp_l = []
-                        for col in row[1:]:
-                            temp_l.append(col)
-                        people[row[0]] = temp_l
-                return render(request, 'detailed.html', {'people': people})
+                qSet = Person.objects.filter(name__icontains=usr_guery).all().order_by('person_id')
+
             else:
-                return render(request, 'detailed.html')
+                qSet = Person.objects.all().order_by('person_id')
+                
+            for person in qSet:
+                people.append(getPersonAttrs(person))
+
+            return render(request, 'detailed.html', {'people': people})
+        else:
+            return redirect(noPermission)
+    else:
+        return redirect(login)
+
+def noPermission(request):
+    return render(request, 'nopermission.html')
+
+def editEntity(request, person_id):
+    check = sessionCheck(request)
+    if check[0]:
+        if person_id == request.session['usr_info'][0]:
+            print("change own")
+            return HttpResponse(f"hello {person_id}, editing own")
+        elif check[1]:
+            print("change other")
+            return HttpResponse(f"hello {person_id}, editing other")
         else:
             return redirect(noPermission)
     else:

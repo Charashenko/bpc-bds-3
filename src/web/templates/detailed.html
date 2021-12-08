@@ -1,6 +1,7 @@
 <html>
     <head>
         {% load static %}
+        {% load webtag %}
         <title>BDS Application</title>
         <link rel="stylesheet" href="{% static 'style.css' %}"/>
     </head>
@@ -10,25 +11,55 @@
             <li><a href = "/">Home</a></li>
             <li><a href = "/logout">Log out</a></li>
         </ul><br><br>
-        <div class="tableFixHead">
-        <table>
+        <form method="POST">{% csrf_token %}
+            <input type="search" name="query" placeholder="enter user's name">
+            <input type="submit" name="submit" value="Search">
+        </form>
+        <br>
+        <table width='100%'>
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Name and Surname</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Birthdate</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Faculties</th>
+                    <th>Departments</th>
+                    <th>Study programs</th>
+                    <th>Subjects</th>
+                    <th>Thesis</th>
                 </tr>
             </thead>
             <tbody>
-                {% for key, vals in people.items %}
-                <tr>
-                    <td>{{key}}</td>
-                    {% for val in vals %}
-                    <td>{{val}}</td>
+                {% for people_attrs in people %}
+                    <tr onclick="document.location = '{% usrId people_attrs %}/editEntity';" class="linkRow">
+                    {% for key, val in people_attrs.items %}
+                        {% if key == 'person' %}
+                            {% for attr, value in val.items %}
+                                {% if attr != 'Passwd' and attr != 'Note' %}
+                                <td>{{value}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if key != 'person' and key != 'thesis' and key != 'addresses' and key != 'contacts' %}
+                        <td>
+                            {% for value in val %}
+                            {{value}}<br>
+                            {% endfor %}
+                        </td>
+                        {% endif %}
+
+                        {% if key == 'thesis' %}
+                        <td>{{val}}</td>
+                        {% endif %}
                     {% endfor %}
-                </tr>
+                    </tr>
+          
                 {% endfor %}
             </tbody>
         </table>
-        </div>
     </body>
 </html>
