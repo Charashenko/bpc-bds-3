@@ -1,7 +1,7 @@
 <html>
     <head>
         {% load static %}
-        {% load webtag %}
+        {% load editTags %}
         <title>BDS Application</title>
         <link rel="stylesheet" href="{% static 'style.css' %}"/>
     </head>
@@ -34,7 +34,7 @@
             </thead>
             <tbody>
                 {% for people_attrs in people %}
-                    <tr onclick="document.location = '{% usrId people_attrs %}/editEntity';" class="linkRow">
+                    <tr onclick="document.location = '{% getUsrId people_attrs %}/editEntity';" class="linkRow">
                     {% for key, val in people_attrs.items %}
                         {% if key == 'person' %}
                             {% for attr, value in val.items %}

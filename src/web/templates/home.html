@@ -14,101 +14,94 @@
         </ul><br>
         
         <div width=100%>
-            <div style="padding-left: 5%; padding-right: 20px;">
-                <table width="40%">
-                    <caption>Personal information</caption>
-                    <tbody>
-                    {% for key, val in person.items %}
-                        {% if key != 'Passwd' and key != 'Email' and key != 'Note'%}
-                        <tr><th>{{key}}</td><td>{{val}}</td></tr>
-                        {% endif %}
+            <table style="margin-left: auto; margin-right: auto; min-width: 40%;">
+                <caption>Personal information</caption>
+                <tbody>
+                {% for key, val in person.items %}
+                    {% if key != 'Passwd' %}
+                    <tr><th>{{key}}</td><td>{{val}}</td></tr>
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <th>Addresses</th>
+                    <td>
+                    {% for val in addresses %}
+                        <b>Type: </b>{{val.0}}
+                        <br>
+                        <b>Address: </b>{{val.1}}
+                        <br>
                     {% endfor %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <table style="margin-left: auto; margin-right: auto; min-width: 40%;">
+                <caption>Additional information</caption>
+                <tbody>
                     <tr>
-                        <th>Addresses</th>
+                        <th>Note</th>
+                        <td>{{person.Note}}</td>
+                    </tr>
+                    <tr>
+                        <th>Roles</th>
                         <td>
-                        {% for val in addresses %}
-                            <b>Type: </b>{{val.0}}
-                            <br>
-                            <b>Address: </b>{{val.1}}
-                            <br>
+                        {% for val in roles %}
+                            {{val}}<br>
                         {% endfor %}
                         </td>
                     </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <br>
-            <div style="padding-left: 5%; padding-right: 20px;">
-                <table width="40%">
-                    <caption>Additional information</caption>
-                    <tbody>
-                        <tr>
-                            <th>Note</th>
-                            <td>{{person.Note}}</td>
-                        </tr>
-                        <tr>
-                            <th>Roles</th>
-                            <td>
-                            {% for val in roles %}
-                                {{val}}<br>
-                            {% endfor %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Faculties</th>
-                            <td>
-                            {% for val in faculties %}
-                                {{val}}<br>
-                            {% endfor %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Departments</th>
-                            <td>
-                            {% for val in departments %}
-                                {{val}}<br>
-                            {% endfor %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Study programs</th>
-                            <td>
-                            {% for val in programmes %}
-                                {{val}}<br>
-                            {% endfor %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Thesis</th>
-                            <td>{{thesis}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <br>
-            <div style="padding-left: 5%;  padding-right: 20px;">
-                <table width="40%">
-                    <caption>Contact information</caption>
-                    <!-- <thead>
-                        <tr>
-                            <th></th>
-                            <th>Type</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead> -->
-                    <tbody>
-                        {% for val in contacts %}
-                        <tr>
-                            <th>Contact</th>
-                            <td>{{val.0}}</td>
-                            <td>{{val.1}}</td><br>
-                        </tr>
+                    <tr>
+                        <th>Faculties</th>
+                        <td>
+                        {% for val in faculties %}
+                            {{val}}<br>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Departments</th>
+                        <td>
+                        {% for val in departments %}
+                            {{val}}<br>
+                        {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Study programs</th>
+                        <td>
+                        {% for val in programmes %}
+                            {{val}}<br>
+                        {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Thesis</th>
+                        <td>{{thesis}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table style="margin-left: auto; margin-right: auto; min-width: 40%;">
+                <caption>Contact information</caption>
+                <!-- <thead>
+                    <tr>
+                        <th></th>
+                        <th>Type</th>
+                        <th>Value</th>
+                    </tr>
+                </thead> -->
+                <tbody>
+                    {% for val in contacts %}
+                    <tr>
+                        <th>Contact</th>
+                        <td>{{val.0}}</td>
+                        <td>{{val.1}}</td><br>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </body>
 </html>

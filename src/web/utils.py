@@ -16,8 +16,8 @@ def getPersonAttrs(person):
     departments = DepartmentHasPerson.objects.filter(person=person).select_related()
     departments = [str(qSet.department.name) for qSet in departments.all()]
 
-    programmes = ProgramHasPerson.objects.filter(person=person).select_related()
-    programmes = [str(qSet.program.name) for qSet in programmes.all()]
+    programs = ProgramHasPerson.objects.filter(person=person).select_related()
+    programs = [str(qSet.program.name) for qSet in programs.all()]
 
     subjects = PersonHasSubject.objects.filter(person=person).select_related()
     subjects = [str(qSet.subject.name) for qSet in subjects.all()]
@@ -42,7 +42,7 @@ def getPersonAttrs(person):
         'roles': roles,
         'faculties': faculties,
         'departments': departments,
-        'programmes': programmes,
+        'programs': programs,
         'subjects': subjects,
         'thesis': thesis
     }

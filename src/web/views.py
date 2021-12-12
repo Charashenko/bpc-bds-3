@@ -34,7 +34,8 @@ def login(request):
             request.session['usr_info'] = newLogin.getUserInfo()
             return redirect(home)
         else:
-            return render(request, "login.html", {'invalid': newLogin.errors.popitem()[1][0]})
+            return render(request, "login.html",
+            {'invalid': newLogin.errors.popitem()[1][0]})
     return render(request, "login.html")
 
 def logout(request):
@@ -69,11 +70,36 @@ def noPermission(request):
 def editEntity(request, person_id):
     check = sessionCheck(request)
     if check[0]:
-        if person_id == request.session['usr_info'][0]:
-            return render(request, 'entityedit.html', {"id":person_id})
-        elif check[1]:
-            return render(request, 'entityedit.html', {"id":person_id})
+        if request.method == 'GET':
+            person = Person.objects.get(person_id=person_id)
+            person_attrs = getPersonAttrs(person)
+
+            roles = Role.objects.all()
+            roles = [str(qSet.role_type) for qSet in roles]
+
+            faculties = Faculty.objects.all()
+            faculties = [str(qSet.name) for qSet in faculties]
+
+            departments = Department.objects.all()
+            departments = [str(qSet.name) for qSet in departments]
+
+            programs = StudyProgram.objects.all()
+            programs = [str(qSet.name) for qSet in programs]
+
+            subjects = Subject.objects.all()
+            subjects = [str(qSet.name) for qSet in subjects]
+
+            if person_id == request.session['usr_info'][0] or check[1]:
+                return render(request, 'entityedit.html', {
+                    'attrs': person_attrs,
+                    'allRoles': roles,
+                    'allFacs': faculties,
+                    'allDeps': departments,
+                    'allProgs': programs
+                })
+            else:
+                return redirect(noPermission)
         else:
-            return redirect(noPermission)
+            return redirect(home)
     else:
         return redirect(login)

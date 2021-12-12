@@ -195,7 +195,7 @@ class Role(models.Model):
         db_table = 'role'
 
     def __str__(self):
-        return str(role_type)
+        return self.role_type
 
 
 class StudyProgram(models.Model):
