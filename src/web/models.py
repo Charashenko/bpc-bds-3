@@ -21,7 +21,7 @@ class Address(models.Model):
         db_table = 'address'
 
     def __str__(self):
-        return f"{self.state}, {self.street}, {self.city}, {self.house_number}, {self.postal_code}"
+        return f"{self.state}, {self.city}, {self.street}, {self.house_number}, {self.postal_code}"
 
 
 class Contact(models.Model):
