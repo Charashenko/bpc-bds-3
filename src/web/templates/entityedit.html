@@ -63,7 +63,7 @@
                                     <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}" checked="checked">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% else %}
-                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="False">
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% endif %}
                                 <br>
@@ -79,7 +79,7 @@
                                     <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}" checked="checked">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% else %}
-                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="False">
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% endif %}
                                 <br>
@@ -95,7 +95,7 @@
                                     <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}" checked="checked">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% else %}
-                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="False">
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% endif %}
                                 <br>
@@ -105,13 +105,13 @@
                         <tr>
                             <th>Study programs</th>
                             <td>
-                                {% getUsrProgs attrs as usrprogs %}
+                            {% getUsrProgs attrs as usrprogs %}
                             {% for val in allProgs %}
                                 {% if val in usrprogs %}
                                     <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}" checked="checked">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% else %}
-                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="False">
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
                                     <label for='{{val}}'>{{val}}</label>
                                 {% endif %}
                                 <br>
@@ -119,9 +119,25 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Subjects</th>
+                            <td>
+                            {% getUsrSubjs attrs as usrsubjs %}
+                            {% for val in allSubjs %}
+                                {% if val in usrsubjs %}
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}" checked="checked">
+                                    <label for='{{val}}'>{{val}}</label>
+                                {% else %}
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
+                                    <label for='{{val}}'>{{val}}</label>
+                                {% endif %}
+                                <br>
+                            {% endfor %}
+                            </td>
+                        </tr>
+                        <!-- <tr>
                             <th>Thesis</th>
                             <td><input style="width: 100%;" type="text" name="thesis" value="{{attrs.thesis}}"/></td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
                 <br>

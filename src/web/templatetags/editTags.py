@@ -21,3 +21,7 @@ def getUsrDeps(person_attrs):
 @register.simple_tag
 def getUsrProgs(person_attrs):
     return person_attrs.get('programs')
+
+@register.simple_tag
+def getUsrSubjs(person_attrs):
+    return person_attrs.get('subjects')

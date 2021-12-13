@@ -58,7 +58,6 @@ class Department(models.Model):
 class DepartmentHasPerson(models.Model):
     department = models.ForeignKey(Department, models.DO_NOTHING)
     person = models.ForeignKey('Person', models.DO_NOTHING)
-    role = models.ForeignKey('Role', models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -96,7 +95,6 @@ class FacultyHasDepartment(models.Model):
 class FacultyHasPerson(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
     person = models.ForeignKey('Person', models.DO_NOTHING)
-    role = models.ForeignKey('Role', models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -155,12 +153,14 @@ class PersonHasRole(models.Model):
     class Meta:
         managed = False
         db_table = 'person_has_role'
+    
+    def __str__(self):
+        return f"{self.person} {self.role}"
 
 
 class PersonHasSubject(models.Model):
     person = models.ForeignKey(Person, models.DO_NOTHING)
     subject = models.ForeignKey('Subject', models.DO_NOTHING)
-    role = models.ForeignKey('Role', models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -170,7 +170,6 @@ class PersonHasSubject(models.Model):
 class ProgramHasPerson(models.Model):
     program = models.ForeignKey('StudyProgram', models.DO_NOTHING)
     person = models.ForeignKey(Person, models.DO_NOTHING)
-    role = models.ForeignKey('Role', models.DO_NOTHING)
 
     class Meta:
         managed = False

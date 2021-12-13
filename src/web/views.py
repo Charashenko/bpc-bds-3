@@ -3,12 +3,13 @@ from .models import *
 from .forms import LoginForm
 from django.contrib import messages
 from .utils import *
+from django.db import DatabaseError, transaction
 
 def home(request):
     check = sessionCheck(request)
     if check[0]:
-        usr_info = request.session['usr_info']
-        person = Person.objects.get(person_id=usr_info[0])
+        usrInfo = request.session['usrInfo']
+        person = Person.objects.get(person_id=usrInfo[0])
 
         attributes = getPersonAttrs(person)
         
@@ -31,7 +32,7 @@ def login(request):
     if request.method == 'POST':
         newLogin = LoginForm(request.POST)
         if newLogin.is_valid():
-            request.session['usr_info'] = newLogin.getUserInfo()
+            request.session['usrInfo'] = newLogin.getUserInfo()
             return redirect(home)
         else:
             return render(request, "login.html",
@@ -40,7 +41,7 @@ def login(request):
 
 def logout(request):
     if sessionCheck(request)[0]:
-        del request.session['usr_info']
+        del request.session['usrInfo']
     return redirect(login)
 
 def detailed(request):
@@ -67,12 +68,12 @@ def detailed(request):
 def noPermission(request):
     return render(request, 'nopermission.html')
 
-def editEntity(request, person_id):
+def editEntity(request, person_id): # Edit person attributes
     check = sessionCheck(request)
     if check[0]:
-        if request.method == 'GET':
+        if check[1]:
             person = Person.objects.get(person_id=person_id)
-            person_attrs = getPersonAttrs(person)
+            oldAttrs = getPersonAttrs(person)
 
             roles = Role.objects.all()
             roles = [str(qSet.role_type) for qSet in roles]
@@ -89,16 +90,30 @@ def editEntity(request, person_id):
             subjects = Subject.objects.all()
             subjects = [str(qSet.name) for qSet in subjects]
 
-            if person_id == request.session['usr_info'][0] or check[1]:
+            if request.method == 'POST':
+                post = request.POST
+                editAttrs = getEditedAttrs(post, person)
+
+                with transaction.atomic():
+                        setPersonAttributes(person, editAttrs)
+
                 return render(request, 'entityedit.html', {
-                    'attrs': person_attrs,
+                    'attrs': editAttrs,
                     'allRoles': roles,
                     'allFacs': faculties,
                     'allDeps': departments,
-                    'allProgs': programs
+                    'allProgs': programs,
+                    'allSubjs': subjects
                 })
-            else:
-                return redirect(noPermission)
+            else:   
+                return render(request, 'entityedit.html', {
+                    'attrs': oldAttrs,
+                    'allRoles': roles,
+                    'allFacs': faculties,
+                    'allDeps': departments,
+                    'allProgs': programs,
+                    'allSubjs': subjects
+                })
         else:
             return redirect(home)
     else:

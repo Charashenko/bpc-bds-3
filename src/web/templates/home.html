@@ -9,7 +9,7 @@
             <li><a class = "info">Welcome, {{person.Name}}</a></li>
             <li><a href = "/detailed">User management</a></li>
             <li><a href = "/{{person.Id}}/editEntity">Edit</a></li>
-            <li><a href = "#passwordchange">Change your password</a></li>
+            <li><a style="cursor: pointer;" onclick="newPasswd()">Change your password</a></li>
             <li><a href = "/logout">Log out</a></li>
         </ul><br>
         
@@ -71,7 +71,15 @@
                     <tr>
                         <th>Study programs</th>
                         <td>
-                        {% for val in programmes %}
+                        {% for val in programs %}
+                            {{val}}<br>
+                        {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Subjects</th>
+                        <td>
+                        {% for val in subjects %}
                             {{val}}<br>
                         {% endfor %}
                         </td>
