@@ -63,10 +63,6 @@ caption {
     font-weight: 700;
 }
 
-td {
-    margin: 2px;
-}
-
 tr.linkRow {
     cursor: pointer;
 }

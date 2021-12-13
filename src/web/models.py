@@ -57,7 +57,7 @@ class Department(models.Model):
 
 class DepartmentHasPerson(models.Model):
     department = models.ForeignKey(Department, models.DO_NOTHING)
-    person = models.ForeignKey('Person', models.DO_NOTHING)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE)
 
     class Meta:
         managed = False
@@ -94,7 +94,7 @@ class FacultyHasDepartment(models.Model):
 
 class FacultyHasPerson(models.Model):
     faculty = models.ForeignKey(Faculty, models.DO_NOTHING)
-    person = models.ForeignKey('Person', models.DO_NOTHING)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE)
 
     class Meta:
         managed = False
@@ -137,7 +137,7 @@ class Person(models.Model):
 
 
 class PersonHasAddress(models.Model):
-    person = models.ForeignKey(Person, models.DO_NOTHING)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, models.DO_NOTHING)
     address_type = models.CharField(max_length=50, blank=True, null=True)
 
@@ -147,7 +147,7 @@ class PersonHasAddress(models.Model):
 
 
 class PersonHasRole(models.Model):
-    person = models.ForeignKey(Person, models.DO_NOTHING)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     role = models.ForeignKey('Role', models.DO_NOTHING)
 
     class Meta:
@@ -159,7 +159,7 @@ class PersonHasRole(models.Model):
 
 
 class PersonHasSubject(models.Model):
-    person = models.ForeignKey(Person, models.DO_NOTHING)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     subject = models.ForeignKey('Subject', models.DO_NOTHING)
 
     class Meta:
@@ -169,7 +169,7 @@ class PersonHasSubject(models.Model):
 
 class ProgramHasPerson(models.Model):
     program = models.ForeignKey('StudyProgram', models.DO_NOTHING)
-    person = models.ForeignKey(Person, models.DO_NOTHING)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
     class Meta:
         managed = False
@@ -227,7 +227,7 @@ class Thesis(models.Model):
     name = models.CharField(max_length=100)
     thesis_type = models.CharField(max_length=20)
     description = models.CharField(max_length=255, blank=True, null=True)
-    person = models.ForeignKey(Person, models.DO_NOTHING)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
 
     class Meta:
         managed = False

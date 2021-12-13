@@ -9,14 +9,17 @@
         <ul class = "topbar">
             <li><a class = "info">User management</a></li>
             <li><a href = "/">Home</a></li>
+            <li>
+                <form method="POST" style="margin: 12px;">{% csrf_token %}
+                    <input type="search" name="query" placeholder="Seach by user's name">
+                    <input type="submit" name="submit" value="Search">
+                </form>
+            </li>
             <li><a href = "/logout">Log out</a></li>
-        </ul><br><br>
-        <form method="POST">{% csrf_token %}
-            <input type="search" name="query" placeholder="enter user's name">
-            <input type="submit" name="submit" value="Search">
-        </form>
+        </ul>
         <br>
         <table width='100%'>
+            <caption>Detailed view of people</caption>
             <thead>
                 <tr>
                     <th>Id</th>
