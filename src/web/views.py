@@ -4,8 +4,11 @@ from .forms import LoginForm
 from django.contrib import messages
 from .utils import *
 from django.db import DatabaseError, transaction
+import logging
 
-def home(request):
+logger = logging.getLogger('django')
+
+def home(request): # Home/Index page
     check = sessionCheck(request)
     if check[0]:
         usrInfo = request.session['usrInfo']
@@ -27,24 +30,29 @@ def home(request):
     else:
        return redirect(login)
 
-def login(request):
+def login(request): # Login page
     email = 'none'
     if request.method == 'POST':
         newLogin = LoginForm(request.POST)
         if newLogin.is_valid():
+            logger.info(f'Login attempt successful from {request.META["REMOTE_ADDR"]}')
             request.session['usrInfo'] = newLogin.getUserInfo()
+            
             return redirect(home)
         else:
+            causeMsg = newLogin.errors.popitem()[1][0]
+            logger.warning(f'Login attempt failed from {request.META["REMOTE_ADDR"]} because of {causeMsg}')
+            
             return render(request, "login.html",
-            {'invalid': newLogin.errors.popitem()[1][0]})
-    return render(request, "login.html")
+            {'invalid': causeMsg})
+    return render(request, "login.html", {'invalid': ""})
 
-def logout(request):
+def logout(request): # Logout
     if sessionCheck(request)[0]:
         del request.session['usrInfo']
     return redirect(login)
 
-def detailed(request):
+def detailed(request): # Detailed view of all people
     check = sessionCheck(request)
     if check[0]:
         if check[1]:
@@ -52,16 +60,16 @@ def detailed(request):
             if request.method == 'POST':
                 usr_guery = request.POST.get('query')
                 qSet = Person.objects.filter(name__icontains=usr_guery).all().order_by('person_id')
-
             else:
-                qSet = Person.objects.all().order_by('person_id')
-                
+                qSet = Person.objects.all().order_by('person_id') 
+            
             for person in qSet:
                 people.append(getPersonAttrs(person))
-
+            
             return render(request, 'detailed.html', {'people': people})
         else:
-            return redirect(noPermission)
+            logger.warning(f'Prohibited request from remote host {request.META["REMOTE_ADDR"]}')
+            return redirect(home)
     else:
         return redirect(login)
 
