@@ -57,7 +57,7 @@ def detailed(request): # Detailed view of all people
     if check[0]:
         if check[1]:
             people = []
-            if request.method == 'POST':
+            if request.method == 'POST': # Filter users by first name
                 usr_guery = request.POST.get('query')
                 qSet = Person.objects.filter(name__icontains=usr_guery).all().order_by('person_id')
             else:
@@ -98,7 +98,7 @@ def editEntity(request, person_id): # Edit person attributes
             subjects = Subject.objects.all()
             subjects = [str(qSet.name) for qSet in subjects]
 
-            if request.method == 'POST':
+            if request.method == 'POST': # Save edited attributes
                 post = request.POST
                 editAttrs = getEditedAttrs(post, person)
 
@@ -126,3 +126,36 @@ def editEntity(request, person_id): # Edit person attributes
             return redirect(home)
     else:
         return redirect(login)
+
+def createEntity(request):
+    check = sessionCheck(request)
+    if check[0]:
+        if check[1]:
+            roles = Role.objects.all()
+            roles = [str(qSet.role_type) for qSet in roles]
+
+            faculties = Faculty.objects.all()
+            faculties = [str(qSet.name) for qSet in faculties]
+
+            departments = Department.objects.all()
+            departments = [str(qSet.name) for qSet in departments]
+
+            programs = StudyProgram.objects.all()
+            programs = [str(qSet.name) for qSet in programs]
+
+            subjects = Subject.objects.all()
+            subjects = [str(qSet.name) for qSet in subjects]
+
+            attrs = {
+                'allRoles': roles,
+                'allFacs': faculties,
+                'allDeps': departments,
+                'allProgs': programs,
+                'allSubjs': subjects
+            }
+
+            return render(request, 'entitycreate.html', attrs)
+        else:
+            return redirect(home)
+    else:
+        redirect(login)

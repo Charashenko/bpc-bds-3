@@ -1,0 +1,98 @@
+<html>
+    <head>
+        {% load static %}
+        {% load editTags %}
+        <title>BDS Application</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    </head>
+    <body>
+        <ul class="topbar">
+            <li><a class = "info">Editing user</a></li>
+            <li><a href = "/">Home</a></li>
+            <li><a href = "/detailed">User management</a></li>
+            <li><a href = "#passwordchange">Change password</a></li>
+            <li><a href = "/logout">Log out</a></li>
+        </ul><br>
+        <div width=100%>
+            <form method="POST">{% csrf_token %}
+                <div style="display: flex; align-items: center; flex-direction: column;">
+                    <input style="width: 80px; padding: 5px; font-weight: bolder;" type="submit" name="editEntity" value="Save">
+                </div>
+                <br>
+                <table style="margin-left: auto; margin-right: auto; min-width: 40%;">
+                    <caption>Personal information</caption>
+                    <tbody>
+                        <tr><th>Name</th><td><input style="width: 100%;" type="text" name="Name"/></td></tr>
+                        <tr><th>Surname</th><td><input style="width: 100%;" type="text" name="Surname"/></td></tr>
+                        <tr><th>Birthdate</th><td><input style="width: 100%;" type="date" name="Birthdate"/></td></tr>
+                        <tr><th>Email</th><td><input style="width: 100%;" type="email" name="Email"/></td></tr>
+                        <tr><th>Note</th><td><input style="width: 100%;" type="text" name="Note"/></td></tr>
+                        <tr><th>Password</th><td><input style="width: 100%;" type="password" name="Password"/></td></tr>
+                        <tr><th>Repeat password</th><td><input style="width: 100%;" type="password" name="RPassword"/></td></tr>
+                    </tbody>
+                </table>
+                <br>
+                <br>
+                <table style="margin-left: auto; margin-right: auto; min-width: 40%;">
+                    <caption>Additional information</caption>
+                    <tbody>
+                        <tr>
+                            <th>Roles</th>
+                            <td>
+                            {% for val in allRoles %}
+                                <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
+                                <label for='{{val}}'>{{val}}</label>
+                                <br>
+                            {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Faculties</th>
+                            <td>
+                                {% for val in allFacs %}
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
+                                    <label for='{{val}}'>{{val}}</label>
+                                    <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Departments</th>
+                            <td>
+                                {% for val in allDeps %}
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
+                                    <label for='{{val}}'>{{val}}</label>
+                                    <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Study programs</th>
+                            <td>
+                                {% for val in allProgs %}
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
+                                    <label for='{{val}}'>{{val}}</label>
+                                    <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Subjects</th>
+                            <td>
+                                {% for val in allSubjs %}
+                                    <input type="checkbox" id="{{val}}" name="{{val}}" value="{{val}}">
+                                    <label for='{{val}}'>{{val}}</label>
+                                    <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <th>Thesis</th>
+                            <td><input style="width: 100%;" type="text" name="thesis" value="{{attrs.thesis}}"/></td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </body>
+</html>

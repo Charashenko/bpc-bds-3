@@ -69,5 +69,5 @@ tr.linkRow {
 
 tr.linkRow:hover {
     cursor: pointer;
-    background-color: rgb(255, 174, 0);
+    color: rgb(255, 174, 0);
 }
