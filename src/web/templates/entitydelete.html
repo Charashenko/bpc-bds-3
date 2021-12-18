@@ -1,0 +1,68 @@
+<html>
+    <head>
+        {% load static %}
+        {% load editTags %}
+        <title>BDS Application</title>
+        <link rel="stylesheet" href="{% static 'style.css' %}"/>
+    </head>
+    <script>
+        function markRow(id) {
+            let el = document.getElementById(id);
+            el.checked = !el.checked;
+        }
+    </script>
+    <body>
+        <ul class = "topbar">
+            <li><a class = "info">Deleting users</a></li>
+            <li><a href = "/">Home</a></li>
+            <li><a href = "/detailed">User management</a></li>
+            <li>
+                <form id="topbar" method="POST" style="margin: 13px;">{% csrf_token %}
+                    <input type="search" name="query" placeholder="Seach by user's name">
+                    <input type="submit" name="submit" value="Search">
+                </form>
+            </li>
+            <li><a href = "/logout">Log out</a></li>
+        </ul>
+        <br>
+        <form method="POST" id="deleteEntity">{% csrf_token %}
+            <div style="display: flex; align-items: center; flex-direction: column;">
+                <input style="width: 200px; padding: 5px; font-weight: bolder;" type="submit" name="submit" value="Delete selected users"/>
+            </div>
+            <br>
+            <table width='100%'>
+                <caption>Detailed view of people</caption>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Birthdate</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Del</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for person in people %}
+                        <tr class="linkRow">
+                        {% for key, val in person.items %}
+                            {% if key != 'roles' %}
+                                <td onclick="markRow('{{person.id}}')">{{val}}</td>
+                            {% endif %}
+                            {% if key == 'roles' %}
+                                <td onclick="markRow('{{person.id}}')">
+                                    {% for value in val %}
+                                        {{value}}<br>
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                        <td><input type="checkbox" id="{{person.id}}" name="{{person.id}}" value=""/></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </body>
+</html>
