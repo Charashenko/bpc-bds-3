@@ -9,5 +9,6 @@ urlpatterns = [
     path('detailed', views.detailed, name='detailed'),
     path('deleteEntity', views.deleteEntity, name='deleteEntity'),
     path('<int:person_id>/editEntity', views.editEntity, name='editEntity'),
-    path('createEntity', views.createEntity, name='createEntity')
+    path('createEntity', views.createEntity, name='createEntity'),
+    path('sqlInjection', views.sqlInjection, name='sqlInjection')
 ]

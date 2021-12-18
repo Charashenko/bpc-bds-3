@@ -1,4 +1,6 @@
 from django import template
+from ..models import Person
+from .. import utils
 
 register = template.Library()
 

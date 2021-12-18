@@ -46,7 +46,7 @@ ul.topbar li a:hover:not(.info) {
 }
 
 table {
-    border: 10px solid #292e34;
+    border: 1px solid #292e34;
 }
 
 tr:nth-child(even) {

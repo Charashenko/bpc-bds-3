@@ -15,17 +15,7 @@ def home(request): # Home/Index page
         person = Person.objects.get(person_id=usrInfo[0])
 
         attributes = getPersonAttrs(person)
-        
-        if request.method == 'GET': # TODO Choose site format
-            if check[1]:
-                print('admin')
-            else:
-                print('not admin')
-
-            return render(request, 'home.html', attributes)
-        elif request.POST.get('elementChange'):
-            return redirect(elementChange)
-
+    
         return render(request, 'home.html', attributes) 
     else:
        return redirect(login)
@@ -191,6 +181,23 @@ def deleteEntity(request): # Deletes selected people
                         people.append(attrs)
 
             return render(request, 'entitydelete.html', {'people': people})
+        else:
+            return redirect(home)
+    else:
+        return redirect(login)
+
+def sqlInjection(request):
+    check = sessionCheck(request)
+    if check[0]:
+        if check[1]:
+            result = ""
+            if request.method == 'POST': 
+                usr_guery = request.POST.get('query')
+                sql_query = f"SELECT person_id, email FROM person WHERE name='{usr_guery}';"
+                result = []
+                for person in Person.objects.raw(sql_query):
+                    result.append(person.email)
+            return render(request, 'sqlInjection.html', {'result': result})
         else:
             return redirect(home)
     else:

@@ -1,6 +1,7 @@
 <html>
     <head>
         {% load static %}
+        {% load editTags %}
         <title>BDS Application</title>
         <link rel="stylesheet" href="{% static 'style.css' %}"/>
     </head>
@@ -9,7 +10,7 @@
             <li><a class = "info">Welcome, {{person.Name}}</a></li>
             <li><a href = "/detailed">User management</a></li>
             <li><a href = "/{{person.Id}}/editEntity">Edit</a></li>
-            <li><a style="cursor: pointer;" onclick="newPasswd()">Change your password</a></li>
+            <li><a href = "/sqlInjection">SQL Injection</a></li>
             <li><a href = "/logout">Log out</a></li>
         </ul><br>
         
