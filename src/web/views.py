@@ -73,9 +73,6 @@ def detailed(request): # Detailed view of all people
     else:
         return redirect(login)
 
-def noPermission(request):
-    return render(request, 'nopermission.html')
-
 def editEntity(request, person_id): # Edit person attributes
     check = sessionCheck(request)
     if check[0]:
@@ -83,27 +80,18 @@ def editEntity(request, person_id): # Edit person attributes
             person = Person.objects.get(person_id=person_id)
             oldAttrs = getPersonAttrs(person)
 
-            roles = Role.objects.all()
-            roles = [str(qSet.role_type) for qSet in roles]
-
-            faculties = Faculty.objects.all()
-            faculties = [str(qSet.name) for qSet in faculties]
-
-            departments = Department.objects.all()
-            departments = [str(qSet.name) for qSet in departments]
-
-            programs = StudyProgram.objects.all()
-            programs = [str(qSet.name) for qSet in programs]
-
-            subjects = Subject.objects.all()
-            subjects = [str(qSet.name) for qSet in subjects]
+            roles = Role.getAll()
+            faculties = Faculty.getAll()
+            departments = Department.getAll()
+            programs = StudyProgram.getAll()
+            subjects = Subject.getAll()
 
             if request.method == 'POST': # Save edited attributes
                 post = request.POST
                 editAttrs = getEditedAttrs(post, person)
 
                 with transaction.atomic():
-                        setPersonAttributes(person, editAttrs)
+                    setPersonAttributes(person, editAttrs)
 
                 return render(request, 'entityedit.html', {
                     'attrs': editAttrs,
@@ -127,24 +115,15 @@ def editEntity(request, person_id): # Edit person attributes
     else:
         return redirect(login)
 
-def createEntity(request):
+def createEntity(request): # Create new person
     check = sessionCheck(request)
     if check[0]:
         if check[1]:
-            roles = Role.objects.all()
-            roles = [str(qSet.role_type) for qSet in roles]
-
-            faculties = Faculty.objects.all()
-            faculties = [str(qSet.name) for qSet in faculties]
-
-            departments = Department.objects.all()
-            departments = [str(qSet.name) for qSet in departments]
-
-            programs = StudyProgram.objects.all()
-            programs = [str(qSet.name) for qSet in programs]
-
-            subjects = Subject.objects.all()
-            subjects = [str(qSet.name) for qSet in subjects]
+            roles = Role.getAll()
+            faculties = Faculty.getAll()
+            departments = Department.getAll()
+            programs = StudyProgram.getAll()
+            subjects = Subject.getAll()
 
             attrs = {
                 'allRoles': roles,
@@ -154,7 +133,17 @@ def createEntity(request):
                 'allSubjs': subjects
             }
 
-            return render(request, 'entitycreate.html', attrs)
+            if request.method == 'POST':
+                person = Person()
+                attrs = getEditedAttrs(request.POST, person)
+                person.passwd = request.POST['Password']
+
+                with transaction.atomic():
+                    setPersonAttributes(person, attrs)
+                
+                return redirect(home)
+            else:
+                return render(request, 'entitycreate.html', attrs)
         else:
             return redirect(home)
     else:

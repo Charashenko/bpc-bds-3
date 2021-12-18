@@ -54,6 +54,8 @@ class Department(models.Model):
         managed = False
         db_table = 'department'
 
+    def getAll():
+        return [str(qSet.name) for qSet in Department.objects.all()]
 
 class DepartmentHasPerson(models.Model):
     department = models.ForeignKey(Department, models.DO_NOTHING)
@@ -81,6 +83,9 @@ class Faculty(models.Model):
     class Meta:
         managed = False
         db_table = 'faculty'
+
+    def getAll():
+        return [str(qSet.name) for qSet in Faculty.objects.all()]
 
 
 class FacultyHasDepartment(models.Model):
@@ -196,6 +201,9 @@ class Role(models.Model):
     def __str__(self):
         return self.role_type
 
+    def getAll():
+        return [str(qSet.role_type) for qSet in Role.objects.all()]
+
 
 class StudyProgram(models.Model):
     program_id = models.AutoField(primary_key=True)
@@ -206,6 +214,8 @@ class StudyProgram(models.Model):
         managed = False
         db_table = 'study_program'
 
+    def getAll():
+        return [str(qSet.name) for qSet in StudyProgram.objects.all()]
 
 class Subject(models.Model):
     subject_id = models.AutoField(primary_key=True)
@@ -220,6 +230,9 @@ class Subject(models.Model):
     class Meta:
         managed = False
         db_table = 'subject'
+
+    def getAll():
+        return [str(qSet.name) for qSet in Subject.objects.all()]
 
 
 class Thesis(models.Model):

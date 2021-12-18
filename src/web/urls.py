@@ -7,7 +7,6 @@ urlpatterns = [
     path('login', views.login, name="login"),
     path('logout', views.logout, name='logout'),
     path('detailed', views.detailed, name='detailed'),
-    path('noPermission', views.noPermission, name='noPermission'),
     path('<int:person_id>/editEntity', views.editEntity, name='editEntity'),
     path('createEntity', views.createEntity, name='createEntity')
 ]
