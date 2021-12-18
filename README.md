@@ -21,7 +21,7 @@ In the first place we need to setup our PostgreSQL server. We will achieve that 
 
     `python -m pip install -r requirements.txt`
 
-5. Create two directories `backups` and `logs`
+5. Create two directories `backups/` and `logs/`
 
 
 6. Lastly we will go to `src/` directory and run the following command:
