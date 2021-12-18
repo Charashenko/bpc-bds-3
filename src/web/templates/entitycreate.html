@@ -13,7 +13,7 @@
             <li><a href = "/logout">Log out</a></li>
         </ul><br>
         <div width=100%>
-            <form name='subForm' method="POST">{% csrf_token %}
+            <form method="POST">{% csrf_token %}
                 <div style="display: flex; align-items: center; flex-direction: column;">
                     <input style="width: 120px; padding: 5px; font-weight: bolder;" type="submit" name="createEntity" value="Create user"/>
                 </div>

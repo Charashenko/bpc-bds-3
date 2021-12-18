@@ -18,7 +18,7 @@
                 <caption>Personal information</caption>
                 <tbody>
                 {% for key, val in person.items %}
-                    {% if key != 'Passwd' %}
+                    {% if key != 'Passwd' and key != 'Note' %}
                     <tr><th>{{key}}</td><td>{{val}}</td></tr>
                     {% endif %}
                 {% endfor %}

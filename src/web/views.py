@@ -92,6 +92,7 @@ def editEntity(request, person_id): # Edit person attributes
 
                 with transaction.atomic():
                     setPersonAttributes(person, editAttrs)
+                    logger.info("Edited user")
 
                 return render(request, 'entityedit.html', {
                     'attrs': editAttrs,
@@ -136,15 +137,61 @@ def createEntity(request): # Create new person
             if request.method == 'POST':
                 person = Person()
                 attrs = getEditedAttrs(request.POST, person)
-                person.passwd = request.POST['Password']
+                if request.POST['Password'] == request.POST['RPassword']:
+                    person.passwd = hashPw(request.POST['Password'])
 
-                with transaction.atomic():
-                    setPersonAttributes(person, attrs)
-                
-                return redirect(home)
+                    with transaction.atomic():
+                        setPersonAttributes(person, attrs)
+                        
+                    logging.info("Person was created")
+                    return redirect(home)
+                else:
+                    return HttpResponse("<script>alert('Passwords don't match!'); document.location = '/createEntity'</script>")
             else:
                 return render(request, 'entitycreate.html', attrs)
         else:
             return redirect(home)
     else:
         redirect(login)
+
+def deleteEntity(request): # Deletes selected people
+    check = sessionCheck(request)
+    if check[0]:
+        if check[1]:
+            people = []
+            delete = False
+
+            if request.method == 'POST': 
+                usr_guery = request.POST.get('query')
+                if usr_guery is not None: # Filter users by first name
+                    qSet = Person.objects.filter(name__icontains=usr_guery).all().order_by('person_id')
+                
+                else: # Initialize removal of individual people
+                    qSet = Person.objects.all().order_by('person_id')
+                    delete = True
+            else:
+                qSet = Person.objects.all().order_by('person_id') 
+
+            for person in qSet: # Loop over people and remove wanted
+                    if delete and str(person.person_id) in dict(request.POST).keys():
+                        person.delete()
+                        logging.info("Person removed from DB")
+                        continue
+                    else:
+                        roles = PersonHasRole.objects.filter(person=person).select_related()
+                        roles = [str(qSet.role.role_type) for qSet in roles.all()]
+                        attrs = {
+                            'id': person.person_id,
+                            'name': person.name,
+                            'surname': person.surname,
+                            'birthdate': person.birthdate,
+                            'email': person.email,
+                            'roles': roles
+                        }
+                        people.append(attrs)
+
+            return render(request, 'entitydelete.html', {'people': people})
+        else:
+            return redirect(home)
+    else:
+        return redirect(login)

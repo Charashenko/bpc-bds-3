@@ -1,5 +1,6 @@
 from .models import *
 from django.shortcuts import render, redirect
+import bcrypt
 
 def getPersonAttrs(person): # Gets person attributes
     contacts = Contact.objects.filter(person=person)
@@ -189,3 +190,6 @@ def setPersonAttributes(person, attrs):
             if filtered:
                 phs = filtered.get()
                 phs.delete()
+
+def hashPw(passwd):
+    return bcrypt.hashpw(passwd.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
