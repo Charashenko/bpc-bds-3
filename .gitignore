@@ -3,3 +3,4 @@ venv/
 src/web/migrations
 logs/*.log
 backups/*
+doc/
